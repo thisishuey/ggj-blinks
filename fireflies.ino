@@ -1,13 +1,13 @@
 byte counter = 0;
 byte colorIndex = 0;
 
-Color colors[6] = {
+const byte numberOfColors = 5;
+Color colors[numberOfColors] = {
     RED,
     YELLOW,
     GREEN,
     BLUE,
     WHITE,
-    OFF,
 };
 
 Timer nextStep;
@@ -20,7 +20,7 @@ void loop()
   if (buttonPressed())
   {
     counter++;
-    if (counter >= 6)
+    if (counter >= 5)
     {
       counter = 0;
     }
@@ -55,7 +55,7 @@ void loop()
     }
 
     colorIndex++;
-    if (colorIndex >= 5)
+    if (colorIndex >= numberOfColors)
     {
       colorIndex = 0;
     }
