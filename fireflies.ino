@@ -1,65 +1,52 @@
-byte counter = 0;
+const int duration = 500;
+const byte numberOfColors = 3;
+
 byte colorIndex = 0;
-
-const byte numberOfColors = 5;
-Color colors[numberOfColors] = {
-    RED,
-    YELLOW,
-    GREEN,
-    BLUE,
-    WHITE,
-};
-
+byte colorStep = 0;
+byte numberIndex = 0;
 Timer nextStep;
 
-void setup() {}
+Color colors[numberOfColors] = {
+    RED,
+    GREEN,
+    BLUE,
+};
+
+void setup()
+{
+  randomize();
+  colorIndex = random(numberOfColors - 1);
+  numberIndex = random(numberOfColors - 1);
+}
 
 void loop()
 {
-
   if (buttonPressed())
   {
-    counter++;
-    if (counter >= 5)
-    {
-      counter = 0;
-    }
+    colorIndex = random(numberOfColors - 1);
+    numberIndex = random(numberOfColors - 1);
   }
 
   if (nextStep.isExpired())
   {
-    setColor(colors[colorIndex]);
+    setColor(colors[colorStep]);
 
     FOREACH_FACE(face)
     {
-      if (counter == 0 && colorIndex == 0 && face == 0)
+      if (colorStep == colorIndex && ((numberIndex == 0 && face == 0) ||
+                                      (numberIndex == 1 && face % 3 == 0) ||
+                                      (numberIndex == 2 && face % 2 == 0)))
       {
-        setColorOnFace(dim(colors[colorIndex], 0), face);
-      }
-      else if (counter == 1 && colorIndex == 1 && face % 3 == 0)
-      {
-        setColorOnFace(dim(colors[colorIndex], 47), face);
-      }
-      else if (counter == 2 && colorIndex == 2 && face % 2 == 0)
-      {
-        setColorOnFace(dim(colors[colorIndex], 47), face);
-      }
-      else if (counter == 3 && colorIndex == 3 && face % 3 != 0)
-      {
-        setColorOnFace(dim(colors[colorIndex], 95), face);
-      }
-      else if (counter == 4 && colorIndex == 4 && face != 5)
-      {
-        setColorOnFace(dim(colors[colorIndex], 95), face);
+        setColorOnFace(dim(OFF, 0), face);
       }
     }
 
-    colorIndex++;
-    if (colorIndex >= numberOfColors)
+    colorStep++;
+    if (colorStep >= numberOfColors)
     {
-      colorIndex = 0;
+      colorStep = 0;
     }
 
-    nextStep.set(500);
+    nextStep.set(duration);
   }
 }
