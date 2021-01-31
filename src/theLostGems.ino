@@ -5,7 +5,7 @@
 
 byte colorIndex = 0;
 byte colorStep = 0;
-bool faceDown = true;
+bool faceDown = false;
 byte faceOffset = 0;
 byte numberIndex = 0;
 byte numberOffset = 0;
@@ -13,7 +13,7 @@ Timer nextStep;
 
 Color colors[COLOR_COUNT] = {
     RED,
-    GREEN,
+    YELLOW,
     BLUE,
 };
 
@@ -51,7 +51,7 @@ void loop()
   {
     if (faceDown)
     {
-      setColor(dim(WHITE, 63));
+      setColor(dim(GREEN, 127));
     }
     else
     {
