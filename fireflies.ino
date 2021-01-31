@@ -1,12 +1,17 @@
 #define COLOR_CHANGE_DURATION 500
-#define NUMBER_OF_COLORS 3
+#define COLOR_COUNT 3
+#define FACE_COUNT 5
+#define NUMBER_COUNT 3
 
 byte colorIndex = 0;
 byte colorStep = 0;
+bool faceDown = true;
+byte faceOffset = 0;
 byte numberIndex = 0;
+byte numberOffset = 0;
 Timer nextStep;
 
-Color colors[NUMBER_OF_COLORS] = {
+Color colors[COLOR_COUNT] = {
     RED,
     GREEN,
     BLUE,
@@ -15,36 +20,64 @@ Color colors[NUMBER_OF_COLORS] = {
 void setup()
 {
   randomize();
-  colorIndex = random(NUMBER_OF_COLORS - 1);
-  numberIndex = random(NUMBER_OF_COLORS - 1);
 }
 
 void loop()
 {
-  if (buttonPressed())
+  if (buttonDoubleClicked())
   {
-    colorIndex = random(NUMBER_OF_COLORS - 1);
-    numberIndex = random(NUMBER_OF_COLORS - 1);
+    faceDown = !faceDown;
+  }
+
+  if (buttonMultiClicked())
+  {
+    numberIndex++;
+    if (numberIndex >= NUMBER_COUNT)
+    {
+      numberIndex = 0;
+    }
+  }
+
+  if (buttonLongPressed())
+  {
+    colorIndex++;
+    if (colorIndex >= COLOR_COUNT)
+    {
+      colorIndex = 0;
+    }
   }
 
   if (nextStep.isExpired())
   {
-    setColor(colors[colorStep]);
-
-    FOREACH_FACE(face)
+    if (faceDown)
     {
-      if (colorStep == colorIndex && ((numberIndex == 0 && face == 0) ||
-                                      (numberIndex == 1 && face % 3 == 0) ||
-                                      (numberIndex == 2 && face % 2 == 0)))
-      {
-        setColorOnFace(dim(colors[colorIndex], 63), face);
-      }
+      setColor(dim(WHITE, 63));
     }
-
-    colorStep++;
-    if (colorStep >= NUMBER_OF_COLORS)
+    else
     {
-      colorStep = 0;
+      faceOffset = random(FACE_COUNT);
+      setColor(colors[colorStep]);
+
+      FOREACH_FACE(face)
+      {
+        if (colorStep == colorIndex && ((numberIndex == 0 && face == 0) ||
+                                        (numberIndex == 1 && face % 3 == 0) ||
+                                        (numberIndex == 2 && face % 2 == 0)))
+        {
+          byte adjustedFace = face + faceOffset;
+          if (adjustedFace >= 6)
+          {
+            adjustedFace = adjustedFace - 6;
+          }
+          setColorOnFace(dim(colors[colorIndex], 0), adjustedFace);
+        }
+      }
+
+      colorStep++;
+      if (colorStep >= COLOR_COUNT)
+      {
+        colorStep = 0;
+      }
     }
 
     nextStep.set(COLOR_CHANGE_DURATION);
