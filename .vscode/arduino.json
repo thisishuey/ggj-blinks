@@ -1,5 +1,5 @@
 {
     "board": "move38:avr:blink",
     "port": "/dev/tty.URT1",
-    "sketch": "fireflies.ino"
+    "sketch": "src/theLostGems.ino"
 }
